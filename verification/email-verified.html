@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Verified</title>
+<style>
+  :root {
+    --primary-blue: #2555D9;
+    --bg: #F3F5F9;
+    --text: #222;
+    --muted: #888;
+    --error: #D9455F;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+  }
+
+  .card {
+    background: #fff;
+    width: 420px;
+    max-width: 90vw;
+    padding: 44px 36px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+
+  .icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #E7F7EF;
+    color: #1D9A6C;
+    font-size: 34px;
+    line-height: 70px;
+    margin: 0 auto 20px;
+  }
+
+  .icon.error {
+    background: #FBE9EC;
+    color: var(--error);
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+
+  p.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  button, a.button {
+    display: inline-block;
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    border: none;
+    border-radius: 6px;
+    background: var(--primary-blue);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  a.button:hover { opacity: 0.9; }
+
+  .hint {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+  <div class="card" id="card">
+    <!-- Populated by script below depending on success/error -->
+  </div>
+
+  <script>
+    // Change this to whatever custom URL scheme the desktop app registers
+    // itself to handle (see note below -- this only works once the app does
+    // that registration on the user's machine).
+    const APP_OPEN_URL = "wpflogin://open";
+
+    const params = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+
+    const errorDescription = params.get("error_description") || hashParams.get("error_description");
+    const card = document.getElementById("card");
+
+    if (errorDescription) {
+      card.innerHTML = `
+        <div class="icon error">&#10005;</div>
+        <h1>Verification Failed</h1>
+        <p class="subtitle">${decodeURIComponent(errorDescription.replace(/\+/g, " "))}</p>
+        <p class="hint">Please request a new confirmation email from the app.</p>
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="icon">&#10003;</div>
+        <h1>Email Verified!</h1>
+        <p class="subtitle">Your email has been confirmed. You can now sign in from the app.</p>
+        <a class="button" href="${APP_OPEN_URL}">Open App</a>
+        <p class="hint">If nothing happens, open the app manually and sign in.</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
